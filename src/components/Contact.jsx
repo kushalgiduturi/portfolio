@@ -151,7 +151,7 @@ const Contact = () => {
                   checked={formData.permission}
                   onChange={handleChange}
                   className="mt-1 w-4 h-4 rounded-sm border-white/30 bg-transparent text-red-600 focus:ring-0 focus:ring-offset-0 cursor-pointer" 
-                  style={{ accentColor: "#E50914" }}
+                  style={{ accentColor: "var(--accent-hex)" }}
                 />
                 <label htmlFor="permission" className="cursor-pointer max-w-[280px] leading-snug">
                   I give permission to contact me at this email address.

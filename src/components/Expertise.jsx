@@ -165,7 +165,7 @@ const Expertise = () => {
               <div 
                 className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
                 style={{
-                  background: 'radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(229,9,20,0.18), transparent 70%)'
+                  background: 'radial-gradient(350px circle at var(--mouse-x) var(--mouse-y), rgba(var(--accent-rgb),0.18), transparent 70%)'
                 }}
               ></div>
 

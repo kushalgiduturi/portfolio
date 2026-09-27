@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import NetflixPreloader from './components/NetflixPreloader';
+import ThemeToggle from './components/ThemeToggle';
 import CustomCursor from './components/CustomCursor';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -21,6 +22,9 @@ function App() {
 
       {/* Global Mouse Hover Effects & Spotlight across ALL sections */}
       <CustomCursor />
+
+      {/* Light/Dark theme toggle */}
+      <ThemeToggle />
 
       {/* Portfolio Sections */}
       <Hero />

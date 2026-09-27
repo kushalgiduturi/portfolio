@@ -96,7 +96,7 @@ const About = () => {
             <div 
               className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{
-                background: 'radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(229,9,20,0.15), transparent 70%)'
+                background: 'radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(var(--accent-rgb),0.15), transparent 70%)'
               }}
             ></div>
 
@@ -130,7 +130,7 @@ const About = () => {
             <div 
               className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{
-                background: 'radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(229,9,20,0.15), transparent 70%)'
+                background: 'radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(var(--accent-rgb),0.15), transparent 70%)'
               }}
             ></div>
 
@@ -170,7 +170,7 @@ const About = () => {
             <div 
               className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{
-                background: 'radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(229,9,20,0.15), transparent 70%)'
+                background: 'radial-gradient(500px circle at var(--mouse-x) var(--mouse-y), rgba(var(--accent-rgb),0.15), transparent 70%)'
               }}
             ></div>
 

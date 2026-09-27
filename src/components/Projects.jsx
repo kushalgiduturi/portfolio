@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SwipeHint from './SwipeHint';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -51,6 +52,104 @@ const Projects = () => {
   const cardsRef = useRef([]);
   const mobileCardsRef = useRef([]);
   const mobileCarouselRef = useRef(null);
+
+  const handleMobileScroll = (e) => {
+    if (window.innerWidth >= 768) return;
+    const container = e.target;
+    const center = container.scrollLeft + container.offsetWidth / 2;
+
+    let activeIdx = 0;
+    let minDiff = Infinity;
+
+    mobileCardsRef.current.forEach((card, i) => {
+      if (!card) return;
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const diff = Math.abs(cardCenter - center);
+      if (diff < minDiff) {
+        minDiff = diff;
+        activeIdx = i;
+      }
+    });
+
+    mobileCardsRef.current.forEach((card, i) => {
+      if (!card) return;
+      gsap.to(card, {
+        scale: i === activeIdx ? 1 : 0.92,
+        opacity: i === activeIdx ? 1 : 0.5,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+    });
+  };
+
+  // Manual horizontal-swipe handling: lets a vertical drag that starts on a card
+  // fall through to normal page scroll, while a horizontal drag still moves the carousel.
+  useEffect(() => {
+    const container = mobileCarouselRef.current;
+    if (!container) return;
+
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let isHorizontal = null;
+
+    const onTouchStart = (e) => {
+      if (window.innerWidth >= 768) return;
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      lastX = startX;
+      isHorizontal = null;
+    };
+
+    const onTouchMove = (e) => {
+      if (window.innerWidth >= 768) return;
+      const t = e.touches[0];
+      const totalDX = t.clientX - startX;
+      const totalDY = t.clientY - startY;
+
+      if (isHorizontal === null && (Math.abs(totalDX) > 6 || Math.abs(totalDY) > 6)) {
+        isHorizontal = Math.abs(totalDX) > Math.abs(totalDY);
+      }
+
+      if (isHorizontal) {
+        e.preventDefault();
+        container.scrollLeft -= (t.clientX - lastX);
+      }
+      lastX = t.clientX;
+    };
+
+    const onTouchEnd = () => {
+      if (window.innerWidth >= 768 || !isHorizontal) return;
+      const center = container.scrollLeft + container.offsetWidth / 2;
+      let nearest = null;
+      let minDiff = Infinity;
+      mobileCardsRef.current.forEach((card) => {
+        if (!card) return;
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const diff = Math.abs(cardCenter - center);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nearest = card;
+        }
+      });
+      if (nearest) {
+        const target = nearest.offsetLeft + nearest.offsetWidth / 2 - container.offsetWidth / 2;
+        container.scrollTo({ left: target, behavior: 'smooth' });
+      }
+    };
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
 
   useEffect(() => {
     let ctx = gsap.context(() => {
@@ -167,11 +266,28 @@ const Projects = () => {
             });
           });
 
+          const settleFinal = () => {
+            gsap.set(folderFrontRef.current, { rotationX: -130 });
+            gsap.set(mobileCardsRef.current, {
+              x: 0,
+              y: 0,
+              rotation: 0,
+              scale: (i) => i === 0 ? 1 : 0.92,
+              opacity: (i) => i === 0 ? 1 : 0.5
+            });
+          };
+
+          // Safety net: if ScrollTrigger never fires (or this environment throttles
+          // the GSAP ticker), force the cards into their final, fully-scrollable
+          // layout anyway so the carousel can never get stuck showing just one card.
+          const fallback = setTimeout(settleFinal, 1500);
+
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: containerRef.current,
               start: "top 60%",
-            }
+            },
+            onComplete: () => clearTimeout(fallback)
           });
 
           tl.to(folderFrontRef.current, {
@@ -197,13 +313,7 @@ const Projects = () => {
             opacity: (i) => i === 0 ? 1 : 0.5,
             duration: 0.8,
             stagger: 0.08,
-            ease: "expo.out",
-            onComplete: () => {
-              if (mobileCarouselRef.current) {
-                mobileCarouselRef.current.style.overflowX = 'auto';
-                mobileCarouselRef.current.style.pointerEvents = 'auto';
-              }
-            }
+            ease: "expo.out"
           }, "-=0.2");
         }
       });
@@ -234,7 +344,7 @@ const Projects = () => {
           {/* Folder Back */}
           <div 
             ref={folderBackRef}
-            className="absolute w-[85vw] md:w-[32vw] max-w-[380px] aspect-video bg-[#141414] rounded-[24px] border border-red-600/40 shadow-[0_20px_50px_rgba(229,9,20,0.25)] flex items-center justify-center"
+            className="hidden md:flex absolute w-[85vw] md:w-[32vw] max-w-[380px] aspect-video bg-[#141414] rounded-[24px] border border-red-600/40 shadow-[0_20px_50px_rgba(229,9,20,0.25)] items-center justify-center"
             style={{ zIndex: 5 }}
           >
             <div className="absolute -top-6 left-6 w-32 h-8 bg-[#1f1f1f] rounded-t-xl border-t border-red-600/30" />
@@ -313,7 +423,9 @@ const Projects = () => {
       {/* Mobile Swipeable Carousel */}
       <div 
         ref={mobileCarouselRef}
-        className="md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-auto py-12 flex items-center gap-6 px-[12.5vw] pointer-events-none z-[100] snap-x snap-mandatory overflow-x-hidden hide-scrollbar"
+        onScroll={handleMobileScroll}
+        className="md:hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-auto py-12 flex items-center gap-6 px-[12.5vw] pointer-events-auto z-[100] overflow-x-auto hide-scrollbar"
+        style={{ touchAction: 'pan-y' }}
       >
         <style>{`
           .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -352,6 +464,8 @@ const Projects = () => {
           </div>
         ))}
       </div>
+
+      <SwipeHint scrollTargetRef={mobileCarouselRef} label="Swipe for more" />
 
     </section>
   );

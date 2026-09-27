@@ -1,6 +1,7 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SwipeHint from './SwipeHint';
 import cehCertificate from '../assets/certs/ceh-certificate.pdf';
 import dfeCertificate from '../assets/certs/dfe-certificate.pdf';
 
@@ -56,6 +57,7 @@ const Skills = () => {
   const cardsRef = useRef([]);
   const bgRefs = useRef([]);
   const textRefs = useRef([]);
+  const carouselRef = useRef(null);
 
   const handleScroll = (e) => {
     if (window.innerWidth >= 769) return;
@@ -89,6 +91,74 @@ const Skills = () => {
       if (txt) gsap.to(txt, { opacity: i === activeIdx ? 1 : 0, duration: 0.4, overwrite: "auto" });
     });
   };
+
+  // Manual horizontal-swipe handling: lets a vertical drag that starts on a card
+  // fall through to normal page scroll, while a horizontal drag still moves the carousel.
+  useEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let isHorizontal = null;
+
+    const onTouchStart = (e) => {
+      if (window.innerWidth >= 769) return;
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      lastX = startX;
+      isHorizontal = null;
+    };
+
+    const onTouchMove = (e) => {
+      if (window.innerWidth >= 769) return;
+      const t = e.touches[0];
+      const totalDX = t.clientX - startX;
+      const totalDY = t.clientY - startY;
+
+      if (isHorizontal === null && (Math.abs(totalDX) > 6 || Math.abs(totalDY) > 6)) {
+        isHorizontal = Math.abs(totalDX) > Math.abs(totalDY);
+      }
+
+      if (isHorizontal) {
+        e.preventDefault();
+        container.scrollLeft -= (t.clientX - lastX);
+      }
+      lastX = t.clientX;
+    };
+
+    const onTouchEnd = () => {
+      if (window.innerWidth >= 769 || !isHorizontal) return;
+      const center = container.scrollLeft + container.offsetWidth / 2;
+      let nearest = null;
+      let minDiff = Infinity;
+      cardsRef.current.forEach((card) => {
+        if (!card) return;
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const diff = Math.abs(cardCenter - center);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nearest = card;
+        }
+      });
+      if (nearest) {
+        const target = nearest.offsetLeft + nearest.offsetWidth / 2 - container.offsetWidth / 2;
+        container.scrollTo({ left: target, behavior: 'smooth' });
+      }
+    };
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
@@ -210,7 +280,9 @@ const Skills = () => {
 
       {/* Carousel Container */}
       <div 
-        className="relative w-full h-full flex md:items-center md:justify-center z-10 md:[transform-style:preserve-3d] overflow-x-auto overflow-y-hidden md:overflow-visible snap-x snap-mandatory scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-center px-[10vw] md:px-0 gap-4 md:gap-0 touch-pan-x"
+        ref={carouselRef}
+        className="relative w-full h-[500px] md:h-full flex md:items-center md:justify-center z-10 md:[transform-style:preserve-3d] overflow-x-auto overflow-y-hidden md:overflow-visible md:snap-x md:snap-mandatory scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] items-center px-[10vw] md:px-0 gap-4 md:gap-0"
+        style={{ touchAction: 'pan-y' }}
         onScroll={handleScroll}
       >
         {skillCategories.map((category, i) => (
@@ -272,6 +344,8 @@ const Skills = () => {
           </div>
         ))}
       </div>
+
+      <SwipeHint scrollTargetRef={carouselRef} label="Swipe for more" />
 
     </section>
   );

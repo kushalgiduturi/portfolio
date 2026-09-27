@@ -6,10 +6,19 @@ const MinimalPreloader = ({ onComplete }) => {
   const contentRef = useRef(null);
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (onComplete) onComplete();
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      if (preloaderRef.current) {
+        preloaderRef.current.style.opacity = '0';
+        preloaderRef.current.style.pointerEvents = 'none';
       }
+      if (onComplete) onComplete();
+    };
+
+    const tl = gsap.timeline({
+      onComplete: finish
     });
 
     tl.set(preloaderRef.current, { autoAlpha: 1 })
@@ -31,12 +40,22 @@ const MinimalPreloader = ({ onComplete }) => {
         duration: 0.5,
         ease: "power2.inOut"
       });
+
+    // Safety net: some hosting/preview environments throttle or block the
+    // GSAP/requestAnimationFrame ticker, which would otherwise leave this
+    // fixed full-screen overlay stuck forever. Force it away if that happens.
+    const fallback = setTimeout(finish, 2200);
+
+    return () => {
+      clearTimeout(fallback);
+      tl.kill();
+    };
   }, [onComplete]);
 
   return (
     <div
       ref={preloaderRef}
-      className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center select-none overflow-hidden"
+      className="fixed inset-0 z-[9999] bg-[#050505] flex items-center justify-center select-none overflow-hidden transition-opacity duration-500"
     >
       <div ref={contentRef} className="flex flex-col items-center gap-4">
         {/* Minimal Red Indicator Dot */}

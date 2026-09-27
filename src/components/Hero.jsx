@@ -135,7 +135,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#050505] overflow-hidden flex flex-col justify-between select-none cursor-none"
+      className="relative w-full min-h-screen lg:h-screen bg-[#050505] overflow-x-hidden lg:overflow-hidden flex flex-col select-none cursor-none"
     >
       <style>{`
         @keyframes marquee {
@@ -167,12 +167,12 @@ const Hero = () => {
         ref={spotlightRef}
         className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none z-10 opacity-0 blur-[90px] transition-opacity duration-300"
         style={{
-          background: 'radial-gradient(circle, rgba(229,9,20,0.35) 0%, rgba(229,9,20,0.1) 40%, transparent 70%)'
+          background: 'radial-gradient(circle, rgba(var(--accent-rgb),0.35) 0%, rgba(var(--accent-rgb),0.1) 40%, transparent 70%)'
         }}
       ></div>
 
       {/* 3. Main Content Layer */}
-      <div ref={contentRef} className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 h-full flex flex-col justify-between pt-24 pb-12">
+      <div ref={contentRef} className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col gap-10 pt-28 pb-16 lg:h-full lg:justify-between lg:gap-8 lg:pt-24 lg:pb-12">
         
         {/* Top Netflix Cinematic Badge */}
         <div className="hero-anim-item flex items-center justify-end w-full">
@@ -183,7 +183,7 @@ const Hero = () => {
         </div>
 
         {/* Main Center Cinematic Stage Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 my-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-8 lg:my-auto">
           
           {/* Left Side: Developer Story & Description */}
           <div className="lg:col-span-5 flex flex-col items-start space-y-5 text-left">
@@ -257,7 +257,7 @@ const Hero = () => {
               <div className="absolute -inset-3 bg-gradient-to-r from-red-600/70 via-rose-600/40 to-purple-600/20 rounded-3xl blur-3xl opacity-90 group-hover:opacity-100 animate-pulse duration-1000"></div>
               
               {/* Poster Card with Glossy Sheen */}
-              <div className="relative w-[280px] md:w-[320px] p-3.5 bg-[#141414]/90 backdrop-blur-2xl rounded-2xl border border-red-600/40 shadow-[0_40px_80px_rgba(0,0,0,0.95)] overflow-hidden">
+              <div className="relative w-[240px] sm:w-[280px] md:w-[320px] p-3.5 bg-[#141414]/90 backdrop-blur-2xl rounded-2xl border border-red-600/40 shadow-[0_40px_80px_rgba(0,0,0,0.95)] overflow-hidden">
                 
                 {/* Dynamic Specular Glare Layer */}
                 <div 
@@ -273,7 +273,7 @@ const Hero = () => {
                 <img
                   src={pictureImg}
                   alt="Developer Portrait"
-                  className="w-full h-[330px] md:h-[390px] object-cover rounded-xl filter contrast-125 brightness-105 group-hover:scale-[1.02] transition-transform duration-500"
+                  className="w-full h-[280px] sm:h-[330px] md:h-[390px] object-cover rounded-xl filter contrast-125 brightness-105 group-hover:scale-[1.02] transition-transform duration-500"
                 />
               </div>
             </div>
@@ -292,7 +292,7 @@ const Hero = () => {
         </div>
 
         {/* Bottom Cinematic Ticker */}
-        <div className="hero-anim-item flex items-center justify-between text-xs font-mono text-white/50 tracking-widest uppercase">
+        <div className="hero-anim-item flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-[10px] sm:text-xs font-mono text-white/50 tracking-widest uppercase">
           <span>ENGINEERED FOR SCALABILITY</span>
           <span>[ PORTFOLIO RELEASE v2.6 ]</span>
         </div>
@@ -310,8 +310,8 @@ const Hero = () => {
       ></div>
 
       {/* --- NETFLIX-THEMED DEVELOPER NAVBAR --- */}
-      <header className="absolute top-0 left-0 z-50 w-full max-w-7xl mx-auto px-6 md:px-12 py-6 flex items-center justify-between pointer-events-auto">
-        <div className="text-lg lg:text-xl xl:text-2xl font-black text-red-600 tracking-tighter flex items-center gap-2 drop-shadow-[0_2px_15px_rgba(229,9,20,0.9)] whitespace-nowrap">
+      <header className="absolute top-0 left-0 z-50 w-full max-w-7xl mx-auto pl-4 pr-16 sm:pl-6 sm:pr-20 md:px-12 py-4 sm:py-6 flex items-center justify-between gap-2 pointer-events-auto">
+        <div className="text-sm sm:text-lg lg:text-xl xl:text-2xl font-black text-red-600 tracking-tighter flex items-center gap-2 drop-shadow-[0_2px_15px_rgba(229,9,20,0.9)] whitespace-nowrap">
           KUSHAL GIDUTURI<span className="w-1.5 h-1.5 rounded-full bg-white inline-block shrink-0"></span>
         </div>
         <nav className="hidden lg:flex items-center gap-5 xl:gap-6 text-xs font-mono uppercase tracking-widest text-white/80">
@@ -326,7 +326,7 @@ const Hero = () => {
         </nav>
         <a
           href="#contact"
-          className="px-5 py-2 rounded bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_0_20px_rgba(229,9,20,0.6)] hover:scale-105 active:scale-95"
+          className="px-3 sm:px-5 py-2 rounded bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] sm:text-xs uppercase tracking-widest transition-all duration-300 shadow-[0_0_20px_rgba(229,9,20,0.6)] hover:scale-105 active:scale-95 shrink-0"
         >
           Hire Me
         </a>
