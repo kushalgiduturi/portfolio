@@ -17,13 +17,13 @@ const projectsData = [
     link: "https://github.com/kushalgiduturi/Zero-Day-Attack-Detection"
   },
   {
-    title: "Astra Project Management Portal",
-    category: "Full-Stack Architecture",
-    description: "Multi-role PHP/MySQL portal spanning sysadmin, admin, employee, team lead, and client roles with billing, delivery, and change-request workflows.",
-    tags: ["PHP", "MySQL", "PHPMailer", "RBAC"],
+    title: "Hastra",
+    category: "Full-Stack Security Platform",
+    description: "Secure delivery workspace for software companies and clients: encrypted data, tamper-evident audit log, role-based portals, dual-key sign-off and one-time credential handover. Live on the web.",
+    tags: ["PHP", "MySQL", "AES-256-GCM", "RBAC"],
     match: "98%",
     episode: "S01 E02",
-    link: "https://github.com/kushalgiduturi"
+    link: "#/case-study/hastra"
   },
   {
     title: "Smart Posture Corrector",
@@ -44,6 +44,8 @@ const projectsData = [
     link: "https://github.com/kushalgiduturi"
   }
 ];
+
+const isExternal = (link) => /^https?:/.test(link);
 
 const Projects = () => {
   const containerRef = useRef(null);
@@ -363,8 +365,7 @@ const Projects = () => {
             >
               <a
                 href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(isExternal(project.link) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="w-full h-full rounded-[24px] overflow-hidden border border-white/15 bg-[#141414]/95 backdrop-blur-2xl shadow-[0_25px_50px_rgba(0,0,0,0.9)] transition-all duration-500 group hover:scale-[1.04] hover:border-red-600 hover:shadow-[0_35px_80px_rgba(229,9,20,0.35)] hover:-translate-y-2 cursor-pointer relative z-10 p-7 flex flex-col justify-between"
               >
                 {/* Top Card Header */}
@@ -439,8 +440,7 @@ const Projects = () => {
           >
             <a
               href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(isExternal(project.link) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="w-full h-full rounded-[24px] overflow-hidden border border-white/15 bg-[#141414] p-6 flex flex-col justify-between shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
             >
               <div className="flex items-center justify-between">

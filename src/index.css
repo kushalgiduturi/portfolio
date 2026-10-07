@@ -270,3 +270,8 @@ body {
 [data-theme="light"] .shadow-\[0_-5px_20px_rgba\(0\,0\,0\,0\.8\)\]{--tw-shadow-color:rgba(15,23,42,0.12)}
 [data-theme="light"] .shadow-\[0_20px_40px_rgba\(0\,0\,0\,0\.9\)\]{--tw-shadow-color:rgba(15,23,42,0.12)}
 [data-theme="light"] .shadow-\[0_-25px_60px_rgba\(0\,0\,0\,0\.9\)\]{--tw-shadow-color:rgba(15,23,42,0.12)}
+
+/* Case study pages: light-theme overrides for classes not covered above */
+[data-theme="light"] .from-red-600\/15{--tw-gradient-from:#2563eb26}
+[data-theme="light"] .bg-white\/40{background-color:#00000066}
+[data-theme="light"] .text-white\/75{color:#000000bf}
