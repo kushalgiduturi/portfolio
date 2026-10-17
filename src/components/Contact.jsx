@@ -1,7 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/kushalgiduturi@gmail.com';
+const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/kushalgiduturi@gmail.com';
+// Set VITE_N8N_WEBHOOK_URL to route submissions through an n8n Webhook node;
+// otherwise fall back to FormSubmit.
+const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL;
 
 const Contact = () => {
   const ref = useRef(null);
@@ -46,18 +49,28 @@ const Contact = () => {
 
     setStatus('sending');
     try {
-      const res = await fetch(CONTACT_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
+      const name = `${formData.firstName} ${formData.lastName}`.trim();
+      const payload = N8N_WEBHOOK_URL
+        ? {
+            name,
+            email: formData.email,
+            message: formData.message,
+            subject: `Portfolio message from ${name}`,
+            submittedAt: new Date().toISOString()
+          }
+        : {
+          name,
           email: formData.email,
           message: formData.message,
           _replyto: formData.email,
           _subject: `Portfolio message from ${formData.firstName} ${formData.lastName}`.trim(),
           _captcha: 'false',
           _template: 'table'
-        })
+        };
+      const res = await fetch(N8N_WEBHOOK_URL || FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data.success === 'false' || data.success === false) throw new Error('send failed');
