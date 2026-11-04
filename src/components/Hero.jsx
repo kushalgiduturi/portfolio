@@ -1,12 +1,15 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import pictureImg from '../assets/Portfolio/picture.png';
+import resumePdf from '../assets/resume/Kushal_Giduturi_Resume.pdf';
 
 const Hero = () => {
   const sectionRef = useRef(null);
   const cardRef = useRef(null);
   const glareRef = useRef(null);
   const spotlightRef = useRef(null);
+  const cursorDotRef = useRef(null);
+  const cursorRingRef = useRef(null);
   const contentRef = useRef(null);
 
   const developerRoles = [
@@ -44,6 +47,18 @@ const Hero = () => {
     );
 
     // --- MOUSE PHYSICS & SPOTLIGHT TRACKING ---
+    gsap.set([cursorDotRef.current, cursorRingRef.current], {
+      scale: 0.5,
+      opacity: 0,
+      transformOrigin: "50% 50%"
+    });
+
+    const xToDot = gsap.quickTo(cursorDotRef.current, "x", { duration: 0.05, ease: "power2.out" });
+    const yToDot = gsap.quickTo(cursorDotRef.current, "y", { duration: 0.05, ease: "power2.out" });
+    
+    const xToRing = gsap.quickTo(cursorRingRef.current, "x", { duration: 0.15, ease: "power3.out" });
+    const yToRing = gsap.quickTo(cursorRingRef.current, "y", { duration: 0.15, ease: "power3.out" });
+
     const xTilt = gsap.quickTo(card, "rotationY", { duration: 0.4, ease: "power3.out" });
     const yTilt = gsap.quickTo(card, "rotationX", { duration: 0.4, ease: "power3.out" });
     const glareX = gsap.quickTo(glareRef.current, "x", { duration: 0.3, ease: "power2.out" });
@@ -54,10 +69,19 @@ const Hero = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
+      const dotSize = 12;
+      const ringSize = 48;
+
       // Update Spotlight position instantly via inline style
       if (spotlightRef.current) {
         spotlightRef.current.style.transform = `translate3d(${x - 300}px, ${y - 300}px, 0)`;
       }
+
+      // Update Custom Cursor coordinates
+      xToDot(x - dotSize / 2);
+      yToDot(y - dotSize / 2);
+      xToRing(x - ringSize / 2);
+      yToRing(y - ringSize / 2);
 
       // Card 3D Perspective Calculations
       const cardRect = card.getBoundingClientRect();
@@ -76,10 +100,22 @@ const Hero = () => {
     };
 
     const handleMouseEnter = () => {
+      gsap.to([cursorDotRef.current, cursorRingRef.current], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.out"
+      });
       if (spotlightRef.current) gsap.to(spotlightRef.current, { opacity: 1, duration: 0.3 });
     };
 
     const handleMouseLeave = () => {
+      gsap.to([cursorDotRef.current, cursorRingRef.current], {
+        opacity: 0,
+        scale: 0.5,
+        duration: 0.3,
+        ease: "power2.inOut"
+      });
       if (spotlightRef.current) gsap.to(spotlightRef.current, { opacity: 0, duration: 0.3 });
       xTilt(0);
       yTilt(0);
@@ -99,7 +135,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen lg:h-screen bg-[#050505] overflow-x-hidden lg:overflow-hidden flex flex-col select-none"
+      className="relative w-full min-h-screen lg:h-screen bg-[#050505] overflow-x-hidden lg:overflow-hidden flex flex-col select-none cursor-none"
     >
       <style>{`
         @keyframes marquee {
@@ -198,6 +234,16 @@ const Hero = () => {
                 </svg>
                 Contact Me
               </a>
+              <a
+                href={resumePdf}
+                download="Kushal_Giduturi_Resume.pdf"
+                className="px-6 py-3.5 bg-neutral-900/80 text-white border border-white/20 font-bold text-xs uppercase tracking-widest rounded hover:bg-red-600 hover:border-red-600 transition-all duration-300 shadow-xl backdrop-blur-md flex items-center gap-2 hover:scale-105 active:scale-95"
+              >
+                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" />
+                </svg>
+                Resume
+              </a>
             </div>
           </div>
 
@@ -251,6 +297,17 @@ const Hero = () => {
           <span>[ PORTFOLIO RELEASE v2.6 ]</span>
         </div>
       </div>
+
+      {/* 4. Ultra Pro Max Custom Precision Cursor Suite */}
+      <div
+        ref={cursorDotRef}
+        className="absolute top-0 left-0 z-50 pointer-events-none w-3 h-3 bg-red-600 rounded-full shadow-[0_0_15px_#E50914]"
+      ></div>
+
+      <div
+        ref={cursorRingRef}
+        className="absolute top-0 left-0 z-50 pointer-events-none w-12 h-12 border border-red-600/60 rounded-full flex items-center justify-center backdrop-blur-[1px]"
+      ></div>
 
       {/* --- NETFLIX-THEMED DEVELOPER NAVBAR --- */}
       <header className="absolute top-0 left-0 z-50 w-full pl-4 pr-16 sm:pl-6 sm:pr-20 md:pl-12 md:pr-24 py-4 sm:py-6 flex items-center justify-between gap-2 pointer-events-auto">

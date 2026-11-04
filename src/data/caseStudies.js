@@ -1,12 +1,5 @@
 import heroShot from '../assets/hastra/hero.png';
 import ringsLogo from '../assets/hastra/hastra-rings-logo.svg';
-import apCover from '../assets/agentplace/cover.webp';
-import apHero from '../assets/agentplace/hero.webp';
-import apBeforeAfter from '../assets/agentplace/before-after.webp';
-import apTemplates from '../assets/agentplace/templates.webp';
-import apFeatures from '../assets/agentplace/features.webp';
-import apControl from '../assets/agentplace/control.webp';
-import apPricing from '../assets/agentplace/pricing.webp';
 
 // Each case study renders on its own page (#/case-study/<slug>).
 export const LIVE_URL = 'https://hastra.onrender.com/';
@@ -178,87 +171,6 @@ export const caseStudies = [
       'A tamper-evident log changes how a team behaves, because everyone knows history cannot be edited quietly.',
       'Plain PHP with no build step made the system far easier to audit, and deployment became a single repeatable Docker stack.',
       'Running behind a TLS-terminating proxy needs care. Redirects, secure cookies and client IP detection all have to trust the proxy deliberately and only in the right places.',
-    ],
-  },
-  {
-    slug: 'agentplace-redesign',
-    eyebrow: 'Case Study · UX / UI Redesign',
-    title: 'Agentplace Redesign',
-    summary:
-      'A self-initiated redesign of Agentplace\'s website, a platform for building AI agents that answer questions, book appointments and take payments. The redesign puts the product up front and makes the owner\'s control over the agent visible, so a small business can trust it before signing up.',
-    figma: 'https://www.figma.com/design/jo8gHHr16P0FsjLhuIXpmA/Attira?node-id=183-374&t=1tJbwqs2fw5Nlti8-1',
-    banner: apCover,
-    meta: [
-      { label: 'Role', value: 'Product / UX Designer' },
-      { label: 'Duration', value: '14 days' },
-      { label: 'Type', value: 'Self-initiated redesign (marketing site)' },
-      { label: 'Tool', value: 'Figma' },
-    ],
-    overview: [
-      'Agentplace\'s site explains what its agents do but does not let a visitor try one, see one work, or see how an owner stays in control. The product prompt sits several scrolls below the fold, five of six feature claims are bare headings, and the agent books appointments and takes payments with no visible approval, handoff or audit trail. A visitor is asked to trust an agent with customers and money on words alone.',
-      'The goal was to let visitors try the product in seconds and see the control layer before signing up.',
-    ],
-    targetUsers: [
-      'Owners of small service businesses (studios, repair crews, clinics) with no technical team.',
-      'Solo operators who need bookings and support covered outside working hours.',
-      'Freelancers and agencies setting up agents for their clients.',
-      'Non-technical founders who want an agent live this week.',
-    ],
-    goalText:
-      'Make three things true for any first-time visitor: they can try it (prompt in the hero), believe it (every capability demonstrated), and stay in control (confirm, handoff and activity log shown on the page).',
-    goalTitle: 'The goal',
-    persona: {
-      name: 'Maya Torres',
-      sub: 'Age 34 · Owner, boutique skincare studio. Proto-persona based on Agentplace\'s target audience, to be validated with real owners.',
-      goals: [
-        'Stop missing booking requests after hours.',
-        'Know exactly what the agent will and will not do.',
-        'Be live without hiring a developer.',
-      ],
-      pains: [
-        'Worried an agent will say or charge something wrong.',
-        'Cannot tell what "AI credits" will cost her per month.',
-        'Marketing pages describe features she cannot picture working.',
-      ],
-    },
-    flowTitle: 'User flow',
-    flow: [
-      'Visitor lands on a hero with the prompt and example chips.',
-      'Types or taps a business type ("Skincare studio in Austin").',
-      'Browses templates and opens a preview before committing.',
-      'Explores features through a demo accordion.',
-      'Reviews "You stay in control": confirm-before-booking, human handoff, activity log.',
-      'Checks pricing with an estimate in conversations per month.',
-      'Signs up with the chosen template or prompt carried over.',
-    ],
-    finalUI: {
-      title: 'Final UI',
-      items: [
-        { src: apHero, caption: 'Hero', text: 'The prompt moves into the hero with example chips, and the press logos get an "As seen in" label so they read as proof.' },
-        { src: apBeforeAfter, caption: 'Before and after', text: 'A side-by-side that shows a normal website next to the same business with an AI agent on top of it.' },
-        { src: apTemplates, caption: 'Template cards and preview modal', text: 'Static cards with outcome labels, and a preview modal so a visitor can see the experience before committing. Reduced motion is supported.' },
-        { src: apFeatures, caption: 'Feature accordion with demo loops', text: 'Every feature gets a one-line description and its own demo loop, so claims are shown rather than only stated.' },
-        { src: apControl, caption: '"You stay in control" section', text: 'Three mini-UIs: a pre-action checkpoint, a handoff to a human, and a plain-English activity log.', wide: true },
-        { src: apPricing, caption: 'Pricing with conversation estimate', text: 'Credits translated into conversations per month, with what happens at the limit stated clearly.', wide: true },
-      ],
-    },
-    audit: {
-      title: 'Audit and validation',
-      intro:
-        'I audited the site as a first-time owner and scored every section against three questions: can I try it, can I believe it, can I stay in control. Each finding became a fix:',
-      items: [
-        'Moved the prompt into the hero, with example chips and an "As seen in" label on the press logos.',
-        'Made template cards static with outcome labels, plus a preview modal and reduced-motion support.',
-        'Gave every feature a one-line description and its own demo loop.',
-        'Added a control section built from three agent-experience moments: pre-action checkpoint, handoff to a human, activity log.',
-        'Translated credits into conversations per month and stated what happens at the limit.',
-      ],
-    },
-    learnings: [
-      'For agent products, the marketing page and the product share one job: making autonomy feel safe.',
-      'Show a control layer early. It answers the biggest objection before it is raised.',
-      'Demonstrated capability beats described capability.',
-      'Translate system units (credits) into outcomes people can plan around.',
     ],
   },
 ];
