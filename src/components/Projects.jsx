@@ -42,7 +42,17 @@ const projectsData = [
     match: "96%",
     episode: "S01 E04",
     link: "https://github.com/kushalgiduturi"
+  },
+  {
+    title: "Agentplace Redesign",
+    category: "UX / UI Design",
+    description: "Self-initiated redesign of an AI agent platform's website that lets visitors try the product in seconds and see how owners stay in control.",
+    tags: ["Figma", "UX Audit", "Web Design", "AX"],
+    match: "97%",
+    episode: "S01 E05",
+    link: "#/case-study/agentplace-redesign"
   }
+
 ];
 
 const isExternal = (link) => /^https?:/.test(link);
@@ -163,7 +173,7 @@ const Projects = () => {
       gsap.set(folderFrontRef.current, { transformOrigin: "bottom center" });
       
       const getGridPos = (index) => {
-        // 2x2 grid layout for a 4-project set
+        // 2-column grid layout (last card centered when the count is odd)
         const row = Math.floor(index / 2);
         const col = index % 2;
         return { row, col };
@@ -237,6 +247,8 @@ const Projects = () => {
             x: (i) => {
               const w = Math.max(...cardsRef.current.map(c => c?.offsetWidth || 0)) || 360;
               const gap = 40;
+              const n = projectsData.length;
+              if (n % 2 === 1 && i === n - 1) return 0;
               const { col } = getGridPos(i);
               return (col - 0.5) * (w + gap);
             },
@@ -244,7 +256,8 @@ const Projects = () => {
               const h = Math.max(...cardsRef.current.map(c => c?.offsetHeight || 0)) || 240;
               const gap = 40;
               const { row } = getGridPos(i);
-              return (row - 0.5) * (h + gap);
+              const rows = Math.ceil(projectsData.length / 2);
+              return (row - (rows - 1) / 2) * (h + gap);
             },
             rotation: () => gsap.utils.random(-3, 3),
             scale: 1,

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getCaseStudy } from '../data/caseStudies';
+import { caseStudies, getCaseStudy } from '../data/caseStudies';
 import Footer from './Footer';
 
 const Reveal = ({ children, className = '', style }) => (
@@ -65,6 +65,32 @@ const LiveButton = ({ url }) => (
   </a>
 );
 
+const FigmaButton = ({ url }) => (
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-black font-bold text-xs uppercase tracking-widest rounded hover:bg-red-600 hover:text-white transition-all duration-300 shadow-[0_10px_35px_rgba(255,255,255,0.25)] hover:scale-105 active:scale-95"
+  >
+    View Figma prototype
+    <span aria-hidden="true">↗</span>
+  </a>
+);
+
+const Gallery = ({ items }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {items.map((img) => (
+      <figure key={img.caption} className={`space-y-3 ${img.wide ? 'md:col-span-2' : ''}`}>
+        <img src={img.src} alt={img.caption} loading="lazy" className={`w-full rounded-2xl border border-white/10 bg-[#0b0b0b] ${img.contain ? 'h-64 object-contain p-8' : ''}`} />
+        <figcaption className="space-y-1">
+          <div className="text-xs font-mono text-red-500 uppercase tracking-wider font-bold">{img.caption}</div>
+          <p className="text-sm text-white/70 font-light leading-relaxed">{img.text}</p>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+);
+
 const CaseStudy = ({ slug }) => {
   const study = getCaseStudy(slug);
 
@@ -77,7 +103,9 @@ const CaseStudy = ({ slug }) => {
   if (!study) return null;
   let n = 0;
   const num = () => String(++n).padStart(2, '0');
-  const totalControls = study.security.groups.reduce((a, g) => a + g.items.length, 0);
+  const totalControls = study.security ? study.security.groups.reduce((a, g) => a + g.items.length, 0) : 0;
+  const idx = caseStudies.findIndex((c) => c.slug === slug);
+  const next = caseStudies[(idx + 1) % caseStudies.length];
 
   return (
     <div className="bg-[#050505] text-white min-h-screen relative overflow-x-clip select-text">
@@ -113,7 +141,12 @@ const CaseStudy = ({ slug }) => {
             ))}
           </Reveal>
 
-          <Reveal><LiveButton url={study.liveUrl} /></Reveal>
+          {(study.liveUrl || study.figma) && (
+            <Reveal className="flex flex-wrap gap-3">
+              {study.liveUrl && <LiveButton url={study.liveUrl} />}
+              {study.figma && <FigmaButton url={study.figma} />}
+            </Reveal>
+          )}
 
           <Reveal>
             <img src={study.banner} alt={`${study.title} cover`} className="w-full rounded-3xl border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.8)]" />
@@ -127,99 +160,160 @@ const CaseStudy = ({ slug }) => {
           </div>
         </Reveal>
 
-        <Reveal className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="space-y-4"><Label>Who it is for</Label><Bullets items={study.targetUsers} /></Card>
-          <Card className="space-y-4"><Label>{study.goalsTitle}</Label><Bullets items={study.designGoals} /></Card>
-        </Reveal>
+        {(study.targetUsers || study.designGoals || study.goalText) && (
+          <Reveal className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {study.targetUsers && <Card className="space-y-4"><Label>{study.targetUsers.length && study.liveUrl ? 'Who it is for' : 'Target users'}</Label><Bullets items={study.targetUsers} /></Card>}
+            {study.designGoals && <Card className="space-y-4"><Label>{study.goalsTitle || 'Design goals'}</Label><Bullets items={study.designGoals} /></Card>}
+            {study.goalText && (
+              <Card className="space-y-4">
+                <Label>{study.goalTitle || 'The goal'}</Label>
+                <p className="text-sm md:text-base text-white/80 font-light leading-relaxed">{study.goalText}</p>
+              </Card>
+            )}
+          </Reveal>
+        )}
 
-        <Reveal className="space-y-8">
-          <SectionTitle index={num()}>{study.flowTitle}</SectionTitle>
-          <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {study.flow.map((step, i) => (
-              <li key={i} className="flex items-start gap-4 p-5 bg-[#141414]/90 border border-white/10 rounded-2xl hover:border-red-600/50 transition-colors">
-                <span className="shrink-0 w-10 h-10 rounded-full bg-red-600/10 border border-red-600/40 text-red-500 font-mono font-black text-sm flex items-center justify-center">{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-sm md:text-base text-white/80 font-light leading-relaxed pt-1.5">{step}</span>
-              </li>
-            ))}
-          </ol>
-        </Reveal>
+        {study.persona && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>User persona</SectionTitle>
+            <Card className="space-y-6">
+              <div>
+                <div className="text-2xl font-black text-white">{study.persona.name}</div>
+                <div className="text-sm text-white/60 font-light">{study.persona.sub}</div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3"><Label>Goals</Label><Bullets items={study.persona.goals} /></div>
+                <div className="space-y-3"><Label>Pain points</Label><Bullets items={study.persona.pains} /></div>
+              </div>
+            </Card>
+          </Reveal>
+        )}
 
-        <Reveal className="space-y-6">
-          <SectionTitle index={num()}>{study.tracks.title}</SectionTitle>
-          <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.tracks.intro}</p>
-          <ItemGrid items={study.tracks.items} />
-        </Reveal>
+        {study.flow && (
+          <Reveal className="space-y-8">
+            <SectionTitle index={num()}>{study.flowTitle || 'User flow'}</SectionTitle>
+            <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {study.flow.map((step, i) => (
+                <li key={i} className="flex items-start gap-4 p-5 bg-[#141414]/90 border border-white/10 rounded-2xl hover:border-red-600/50 transition-colors">
+                  <span className="shrink-0 w-10 h-10 rounded-full bg-red-600/10 border border-red-600/40 text-red-500 font-mono font-black text-sm flex items-center justify-center">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-sm md:text-base text-white/80 font-light leading-relaxed pt-1.5">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        )}
 
-        <Reveal className="space-y-6">
-          <SectionTitle index={num()}>{study.features.title}</SectionTitle>
-          <ItemGrid items={study.features.items} />
-        </Reveal>
+        {study.tracks && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.tracks.title}</SectionTitle>
+            <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.tracks.intro}</p>
+            <ItemGrid items={study.tracks.items} />
+          </Reveal>
+        )}
 
-        <Reveal className="space-y-6">
-          <SectionTitle index={num()}>{study.labs.title}</SectionTitle>
-          <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.labs.intro}</p>
-          <ItemGrid items={study.labs.items} cols="md:grid-cols-3" />
-        </Reveal>
+        {study.features && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.features.title}</SectionTitle>
+            <ItemGrid items={study.features.items} />
+          </Reveal>
+        )}
 
-        <Reveal className="space-y-6">
-          <SectionTitle index={num()}>{study.architecture.title}</SectionTitle>
-          <div className="space-y-4 max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">
-            {study.architecture.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {study.architecture.stack.map((s) => (
-              <span key={s} className="px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider text-white/80 bg-white/5 border border-white/10">{s}</span>
-            ))}
-          </div>
-        </Reveal>
+        {study.labs && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.labs.title}</SectionTitle>
+            <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.labs.intro}</p>
+            <ItemGrid items={study.labs.items} cols="md:grid-cols-3" />
+          </Reveal>
+        )}
 
-        {/* Security */}
-        <section className="space-y-8" id="security">
-          <Reveal className="space-y-4">
-            <SectionTitle index={num()}>{study.security.title}</SectionTitle>
-            <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.security.intro}</p>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-black/80 border border-red-600/40 text-[11px] font-mono uppercase tracking-widest text-red-500 font-bold">
-              {totalControls} controls across {study.security.groups.length} layers
+        {study.architecture && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.architecture.title}</SectionTitle>
+            <div className="space-y-4 max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">
+              {study.architecture.paragraphs.map((p, i) => <p key={i}>{p}</p>)}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {study.architecture.stack.map((s) => (
+                <span key={s} className="px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider text-white/80 bg-white/5 border border-white/10">{s}</span>
+              ))}
             </div>
           </Reveal>
-          {study.security.groups.map((g, gi) => (
-            <Reveal key={g.name} className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-bold text-red-500">{String(gi + 1).padStart(2, '0')}</span>
-                <Label>{g.name}</Label>
-              </div>
-              <ItemGrid items={g.items} cols="md:grid-cols-2 lg:grid-cols-3" />
-            </Reveal>
-          ))}
-        </section>
+        )}
 
-        <Reveal className="space-y-6">
-          <SectionTitle index={num()}>{study.gallery.title}</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {study.gallery.items.map((img) => (
-              <figure key={img.caption} className="space-y-3">
-                <img src={img.src} alt={img.caption} loading="lazy" className={`w-full rounded-2xl border border-white/10 bg-[#0b0b0b] ${img.contain ? 'h-64 object-contain p-8' : ''}`} />
-                <figcaption className="space-y-1">
-                  <div className="text-xs font-mono text-red-500 uppercase tracking-wider font-bold">{img.caption}</div>
-                  <p className="text-sm text-white/70 font-light leading-relaxed">{img.text}</p>
-                </figcaption>
-              </figure>
+        {study.security && (
+          <section className="space-y-8" id="security">
+            <Reveal className="space-y-4">
+              <SectionTitle index={num()}>{study.security.title}</SectionTitle>
+              <p className="max-w-3xl text-sm md:text-base text-white/80 font-light leading-relaxed">{study.security.intro}</p>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-black/80 border border-red-600/40 text-[11px] font-mono uppercase tracking-widest text-red-500 font-bold">
+                {totalControls} controls across {study.security.groups.length} layers
+              </div>
+            </Reveal>
+            {study.security.groups.map((g, gi) => (
+              <Reveal key={g.name} className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-mono font-bold text-red-500">{String(gi + 1).padStart(2, '0')}</span>
+                  <Label>{g.name}</Label>
+                </div>
+                <ItemGrid items={g.items} cols="md:grid-cols-2 lg:grid-cols-3" />
+              </Reveal>
             ))}
-          </div>
-        </Reveal>
+          </section>
+        )}
+
+        {study.gallery && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.gallery.title}</SectionTitle>
+            <Gallery items={study.gallery.items} />
+          </Reveal>
+        )}
+
+        {study.finalUI && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.finalUI.title}</SectionTitle>
+            <Gallery items={study.finalUI.items} />
+          </Reveal>
+        )}
+
+        {study.audit && (
+          <Reveal className="space-y-6">
+            <SectionTitle index={num()}>{study.audit.title}</SectionTitle>
+            <Card className="space-y-5">
+              <p className="text-sm md:text-base text-white/80 font-light leading-relaxed">{study.audit.intro}</p>
+              <Bullets items={study.audit.items} />
+            </Card>
+          </Reveal>
+        )}
 
         <Reveal className="space-y-6">
           <SectionTitle index={num()}>Key learnings</SectionTitle>
           <Card><Bullets items={study.learnings} /></Card>
         </Reveal>
 
-        <Reveal className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-8 md:p-10 rounded-3xl border border-white/10 bg-gradient-to-br from-red-600/15 via-[#141414] to-[#0a0a0a]">
-          <div className="space-y-1">
-            <div className="text-xs font-mono uppercase tracking-widest text-white/50">See it running</div>
-            <div className="text-2xl md:text-4xl font-black tracking-tight text-white">hastra.onrender.com</div>
-          </div>
-          <LiveButton url={study.liveUrl} />
-        </Reveal>
+        {study.liveUrl && (
+          <Reveal className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-8 md:p-10 rounded-3xl border border-white/10 bg-gradient-to-br from-red-600/15 via-[#141414] to-[#0a0a0a]">
+            <div className="space-y-1">
+              <div className="text-xs font-mono uppercase tracking-widest text-white/50">See it running</div>
+              <div className="text-2xl md:text-4xl font-black tracking-tight text-white">hastra.onrender.com</div>
+            </div>
+            <LiveButton url={study.liveUrl} />
+          </Reveal>
+        )}
+
+        {caseStudies.length > 1 && (
+          <Reveal>
+            <a
+              href={`#/case-study/${next.slug}`}
+              className="group block p-8 md:p-10 rounded-3xl border border-white/10 bg-gradient-to-br from-red-600/15 via-[#141414] to-[#0a0a0a] hover:border-red-600/60 transition-all"
+            >
+              <div className="text-xs font-mono uppercase tracking-widest text-white/50">Next case study</div>
+              <div className="mt-2 flex items-center justify-between gap-4">
+                <span className="text-3xl md:text-5xl font-black tracking-tight text-white group-hover:text-red-500 transition-colors">{next.title}</span>
+                <span className="text-2xl text-red-500 group-hover:translate-x-2 transition-transform" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </Reveal>
+        )}
       </main>
 
       <Footer />
