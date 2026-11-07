@@ -8,29 +8,40 @@ const SwipeHint = ({ scrollTargetRef, label = 'Swipe for more' }) => {
   useEffect(() => {
     const el = scrollTargetRef?.current;
     if (!el) return;
+    // Watch the whole section so the hint appears once the carousel is actually on screen,
+    // and show it again every time the user scrolls back to it.
+    const section = el.closest('section') || el;
 
-    const hide = () => setVisible(false);
+    const hide = () => {
+      clearTimeout(hideTimerRef.current);
+      setVisible(false);
+    };
 
     const show = () => {
-      if (shownRef.current) return;
-      shownRef.current = true;
+      clearTimeout(hideTimerRef.current);
       setVisible(true);
-      hideTimerRef.current = setTimeout(hide, 4500);
+      hideTimerRef.current = setTimeout(hide, 6000);
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            show();
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+            if (!shownRef.current) {
+              shownRef.current = true;
+              show();
+            }
+          } else if (!entry.isIntersecting) {
+            shownRef.current = false;
+            hide();
           }
         });
       },
-      { threshold: [0, 0.5, 1] }
+      { threshold: [0, 0.35, 0.6, 1] }
     );
-    observer.observe(el);
+    observer.observe(section);
 
-    el.addEventListener('scroll', hide, { passive: true, once: true });
+    el.addEventListener('scroll', hide, { passive: true });
 
     return () => {
       observer.disconnect();
@@ -55,7 +66,7 @@ const SwipeHint = ({ scrollTargetRef, label = 'Swipe for more' }) => {
         .swipe-hint-arrow { animation: swipeHintArrow 1.1s ease-in-out infinite; animation-delay: 0.15s; }
       `}</style>
       <div
-        className={`md:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-[110] pointer-events-none flex items-center gap-2 px-4 py-2 rounded-full bg-black/75 backdrop-blur-md border border-red-600/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out ${
+        className={`md:hidden absolute bottom-6 left-1/2 -translate-x-1/2 z-[110] pointer-events-none flex items-center gap-2 px-4 py-2 rounded-full bg-black/75 backdrop-blur-md border border-red-600/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out ${
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
       >

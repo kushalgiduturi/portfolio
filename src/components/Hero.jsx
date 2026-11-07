@@ -8,8 +8,6 @@ const Hero = () => {
   const cardRef = useRef(null);
   const glareRef = useRef(null);
   const spotlightRef = useRef(null);
-  const cursorDotRef = useRef(null);
-  const cursorRingRef = useRef(null);
   const contentRef = useRef(null);
 
   const developerRoles = [
@@ -47,18 +45,6 @@ const Hero = () => {
     );
 
     // --- MOUSE PHYSICS & SPOTLIGHT TRACKING ---
-    gsap.set([cursorDotRef.current, cursorRingRef.current], {
-      scale: 0.5,
-      opacity: 0,
-      transformOrigin: "50% 50%"
-    });
-
-    const xToDot = gsap.quickTo(cursorDotRef.current, "x", { duration: 0.05, ease: "power2.out" });
-    const yToDot = gsap.quickTo(cursorDotRef.current, "y", { duration: 0.05, ease: "power2.out" });
-    
-    const xToRing = gsap.quickTo(cursorRingRef.current, "x", { duration: 0.15, ease: "power3.out" });
-    const yToRing = gsap.quickTo(cursorRingRef.current, "y", { duration: 0.15, ease: "power3.out" });
-
     const xTilt = gsap.quickTo(card, "rotationY", { duration: 0.4, ease: "power3.out" });
     const yTilt = gsap.quickTo(card, "rotationX", { duration: 0.4, ease: "power3.out" });
     const glareX = gsap.quickTo(glareRef.current, "x", { duration: 0.3, ease: "power2.out" });
@@ -69,19 +55,10 @@ const Hero = () => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      const dotSize = 12;
-      const ringSize = 48;
-
       // Update Spotlight position instantly via inline style
       if (spotlightRef.current) {
         spotlightRef.current.style.transform = `translate3d(${x - 300}px, ${y - 300}px, 0)`;
       }
-
-      // Update Custom Cursor coordinates
-      xToDot(x - dotSize / 2);
-      yToDot(y - dotSize / 2);
-      xToRing(x - ringSize / 2);
-      yToRing(y - ringSize / 2);
 
       // Card 3D Perspective Calculations
       const cardRect = card.getBoundingClientRect();
@@ -100,22 +77,10 @@ const Hero = () => {
     };
 
     const handleMouseEnter = () => {
-      gsap.to([cursorDotRef.current, cursorRingRef.current], {
-        opacity: 1,
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.out"
-      });
       if (spotlightRef.current) gsap.to(spotlightRef.current, { opacity: 1, duration: 0.3 });
     };
 
     const handleMouseLeave = () => {
-      gsap.to([cursorDotRef.current, cursorRingRef.current], {
-        opacity: 0,
-        scale: 0.5,
-        duration: 0.3,
-        ease: "power2.inOut"
-      });
       if (spotlightRef.current) gsap.to(spotlightRef.current, { opacity: 0, duration: 0.3 });
       xTilt(0);
       yTilt(0);
@@ -135,7 +100,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen lg:h-screen bg-[#050505] overflow-x-hidden lg:overflow-hidden flex flex-col select-none cursor-none"
+      className="relative w-full min-h-screen lg:h-screen bg-[#050505] overflow-x-hidden lg:overflow-hidden flex flex-col select-none"
     >
       <style>{`
         @keyframes marquee {
@@ -201,8 +166,6 @@ const Hero = () => {
             </h1>
 
             <div className="hero-anim-item flex items-center gap-3 text-xs font-mono text-red-400 font-bold">
-              <span className="px-2 py-0.5 bg-red-500/10 border border-red-500/30 rounded text-red-500">99% Detection Precision</span>
-              <span className="text-white/40">•</span>
               <span>Python • Java • SQL</span>
               <span className="text-white/40">•</span>
               <span className="text-white/70">Kali Linux & Cloud</span>
@@ -273,7 +236,7 @@ const Hero = () => {
                 <img
                   src={pictureImg}
                   alt="Developer Portrait"
-                  className="w-full h-[280px] sm:h-[330px] md:h-[390px] object-cover rounded-xl filter contrast-125 brightness-105 group-hover:scale-[1.02] transition-transform duration-500"
+                  className="w-full h-[280px] sm:h-[330px] md:h-[390px] object-cover object-top rounded-xl filter contrast-125 brightness-105 group-hover:scale-[1.02] transition-transform duration-500"
                 />
               </div>
             </div>
@@ -291,23 +254,7 @@ const Hero = () => {
 
         </div>
 
-        {/* Bottom Cinematic Ticker */}
-        <div className="hero-anim-item flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-[10px] sm:text-xs font-mono text-white/50 tracking-widest uppercase">
-          <span>ENGINEERED FOR SCALABILITY</span>
-          <span>[ PORTFOLIO RELEASE v2.6 ]</span>
-        </div>
       </div>
-
-      {/* 4. Ultra Pro Max Custom Precision Cursor Suite */}
-      <div
-        ref={cursorDotRef}
-        className="absolute top-0 left-0 z-50 pointer-events-none w-3 h-3 bg-red-600 rounded-full shadow-[0_0_15px_#E50914]"
-      ></div>
-
-      <div
-        ref={cursorRingRef}
-        className="absolute top-0 left-0 z-50 pointer-events-none w-12 h-12 border border-red-600/60 rounded-full flex items-center justify-center backdrop-blur-[1px]"
-      ></div>
 
       {/* --- NETFLIX-THEMED DEVELOPER NAVBAR --- */}
       <header className="absolute top-0 left-0 z-50 w-full pl-4 pr-16 sm:pl-6 sm:pr-20 md:pl-12 md:pr-24 py-4 sm:py-6 flex items-center justify-between gap-2 pointer-events-auto">

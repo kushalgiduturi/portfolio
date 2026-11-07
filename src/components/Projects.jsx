@@ -12,8 +12,6 @@ const projectsData = [
     category: "AI & Network Security",
     description: "IEEE-backed Deep RL system for zero-day cyberattack detection achieving 99% precision across 5 benchmark datasets.",
     tags: ["PyTorch", "CUDA", "FastAPI", "Docker"],
-    match: "99%",
-    episode: "S01 E01",
     link: "https://github.com/kushalgiduturi/Zero-Day-Attack-Detection"
   },
   {
@@ -21,8 +19,6 @@ const projectsData = [
     category: "Full-Stack Security Platform",
     description: "Secure delivery workspace for software companies and clients: encrypted data, tamper-evident audit log, role-based portals, dual-key sign-off and one-time credential handover. Live on the web.",
     tags: ["PHP", "MySQL", "AES-256-GCM", "RBAC"],
-    match: "98%",
-    episode: "S01 E02",
     link: "#/case-study/hastra"
   },
   {
@@ -30,8 +26,6 @@ const projectsData = [
     category: "Embedded Systems",
     description: "Real-time posture monitoring system using accelerometer/gyroscope sensing and microcontroller-based processing to prevent back and neck strain.",
     tags: ["Python", "Arduino", "MPU6050"],
-    match: "96%",
-    episode: "S01 E03",
     link: "https://github.com/kushalgiduturi"
   },
   {
@@ -39,8 +33,6 @@ const projectsData = [
     category: "Signal Processing",
     description: "Signal-processing pipeline that removes unwanted noise from audio while preserving speech clarity using FFT-based filtering.",
     tags: ["Python", "NumPy", "SciPy", "FFT"],
-    match: "96%",
-    episode: "S01 E04",
     link: "https://github.com/kushalgiduturi"
   }
 ];
@@ -368,16 +360,6 @@ const Projects = () => {
                 {...(isExternal(project.link) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="w-full h-full rounded-[24px] overflow-hidden border border-white/15 bg-[#141414]/95 backdrop-blur-2xl shadow-[0_25px_50px_rgba(0,0,0,0.9)] transition-all duration-500 group hover:scale-[1.04] hover:border-red-600 hover:shadow-[0_35px_80px_rgba(229,9,20,0.35)] hover:-translate-y-2 cursor-pointer relative z-10 p-7 flex flex-col justify-between"
               >
-                {/* Top Card Header */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-red-500 bg-red-600/10 px-2.5 py-1 rounded border border-red-600/20">
-                    {project.episode}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-red-400 font-bold">{project.match} Match</span>
-                    <span className="text-[10px] font-mono border border-white/30 px-1 text-white/70">HD</span>
-                  </div>
-                </div>
 
                 {/* Middle Title & Description */}
                 <div className="space-y-2 my-auto">
@@ -443,12 +425,6 @@ const Projects = () => {
               {...(isExternal(project.link) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="w-full h-full rounded-[24px] overflow-hidden border border-white/15 bg-[#141414] p-6 flex flex-col justify-between shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-red-500 bg-red-600/10 px-2 py-0.5 rounded">
-                  {project.episode}
-                </span>
-                <span className="text-xs font-mono text-red-400 font-bold">{project.match} Match</span>
-              </div>
               <div className="space-y-2">
                 <h3 className="text-xl font-black text-white">{project.title}</h3>
                 <p className="text-xs text-white/70 font-light line-clamp-2">{project.description}</p>

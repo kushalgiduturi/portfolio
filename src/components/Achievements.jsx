@@ -105,8 +105,6 @@ const Achievements = () => {
         <div className="flex flex-col items-start space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-black/80 backdrop-blur-2xl border border-red-600/40 text-xs font-mono uppercase tracking-widest text-white shadow-2xl">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>
-            <span className="text-red-500 font-bold">EPISODE 04</span>
-            <span className="text-white/40">|</span>
             <span>CERTIFICATIONS & ACHIEVEMENTS</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white">

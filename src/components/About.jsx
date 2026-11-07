@@ -72,12 +72,9 @@ const About = () => {
         <div className="flex flex-col items-start space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-black/80 backdrop-blur-2xl border border-red-600/40 text-xs font-mono uppercase tracking-widest text-white shadow-2xl">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>
-            <span className="text-red-500 font-bold">EPISODE 01</span>
-            <span className="text-white/40">|</span>
             <span>ABOUT THE ENGINEER</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white">
-            EPISODE SYNOPSIS <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-600 to-red-700 drop-shadow-[0_0_30px_rgba(229,9,20,0.4)]">
               ORIGIN & VISION.
             </span>
@@ -156,9 +153,6 @@ const About = () => {
               </ul>
             </div>
             
-            <div className="pt-6 font-mono text-xs text-white/40 relative z-10">
-              SEASON 01 HIGHLIGHTS
-            </div>
           </div>
 
           {/* Card 3: Technical Ecosystem (Span 12) */}
