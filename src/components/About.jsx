@@ -148,7 +148,7 @@ const About = () => {
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="text-red-500 font-bold">&#8250;</span>
-                  <span>Built a <strong className="text-white">99% precision</strong> Zero-Day Cyberattack Detection system, backed by an IEEE Access publication.</span>
+                  <span>Built a <strong className="text-white">Zero-Day Cyberattack Detection</strong> system, backed by an IEEE Access publication.</span>
                 </li>
               </ul>
             </div>

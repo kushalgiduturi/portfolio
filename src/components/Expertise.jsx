@@ -52,7 +52,7 @@ const expertiseData = [
     number: "03",
     icon: "brain",
     title: "AI & Deep Learning",
-    text: "Building deep reinforcement learning systems for zero-day cyberattack detection using PyTorch and CUDA, achieving 99% precision across five benchmark datasets.",
+    text: "Building deep reinforcement learning systems for zero-day cyberattack detection using PyTorch and CUDA, evaluated across five benchmark datasets.",
     tag: "INTELLIGENCE & ML",
     gradient: "from-[#220a0d] via-[#131313] to-[#0a0a0a]"
   },

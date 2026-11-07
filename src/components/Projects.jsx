@@ -10,7 +10,7 @@ const projectsData = [
   {
     title: "Zero-Day Cyberattack Detection",
     category: "AI & Network Security",
-    description: "IEEE-backed Deep RL system for zero-day cyberattack detection achieving 99% precision across 5 benchmark datasets.",
+    description: "IEEE-backed Deep RL system for zero-day cyberattack detection evaluated across 5 benchmark datasets.",
     tags: ["PyTorch", "CUDA", "FastAPI", "Docker"],
     link: "https://github.com/kushalgiduturi/Zero-Day-Attack-Detection"
   },
